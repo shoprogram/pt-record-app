@@ -22,8 +22,12 @@ logs
 docs/debug/*.png
 docs/debug/*.jpg
 docs/debug/*.jpeg
+playwright-report
 
 # Local env files
 .env
 .env.*
 !.env.example
+
+# Specification
+specification/**
