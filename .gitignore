@@ -18,6 +18,11 @@ logs
 .fleet
 .idea
 
+# Debug files
+docs/debug/*.png
+docs/debug/*.jpg
+docs/debug/*.jpeg
+
 # Local env files
 .env
 .env.*
