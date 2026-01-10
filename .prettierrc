@@ -1,0 +1,11 @@
+{
+  "printWidth": 120,
+  "semi": false,
+  "singleQuote": true,
+  "trailingComma": "all",
+  "bracketSpacing": true,
+  "arrowParens": "always",
+  "vueIndentScriptAndStyle": true,
+  "endOfLine": "lf",
+  "plugins": ["prettier-plugin-tailwindcss"]
+}
