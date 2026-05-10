@@ -1,3 +1,50 @@
+// Database types (includes user_id for internal use)
+export interface PatientDB {
+  id: string
+  user_id: string
+  code: string
+  name: string
+  age: number
+  gender: string
+  diagnosis: string
+  height?: number
+  weight?: number
+  medical_history?: string
+  medications?: string
+  last_visit_date?: string
+  start_date?: string
+  notes?: string
+  created_at?: string
+  updated_at?: string
+}
+
+export interface PatientRecordDB {
+  id: string
+  patient_id: string
+  user_id: string
+  date: string
+  session_id?: string
+  standard_evaluations: Record<string, number | null>
+  note?: string
+  created_at?: string
+  updated_at?: string
+}
+
+export interface CustomEvaluationDB {
+  id: string
+  patient_record_id: string
+  name: string
+  value: string
+  unit: string
+  direction: 'higher_is_better' | 'lower_is_better'
+  min_value?: number
+  max_value?: number
+  tags?: string[]
+  note?: string
+  created_at?: string
+}
+
+// API types (without user_id, for client consumption)
 export interface Patient {
   id: string
   code: string
@@ -67,3 +114,60 @@ export interface CreateRecordRequest {
   customEvaluations: CustomEvaluation[]
   note?: string
 }
+
+// 患者作成リクエスト
+export interface CreatePatientRequest {
+  code: string
+  name: string
+  age: number
+  gender: string
+  diagnosis: string
+  height?: number
+  weight?: number
+  medicalHistory?: string
+  medications?: string
+  startDate?: string
+  notes?: string
+}
+
+// Mapper functions to convert between DB and API types
+export const mapPatientFromDB = (dbPatient: PatientDB): Patient => ({
+  id: dbPatient.id,
+  code: dbPatient.code,
+  name: dbPatient.name,
+  age: dbPatient.age,
+  gender: dbPatient.gender,
+  diagnosis: dbPatient.diagnosis,
+  height: dbPatient.height,
+  weight: dbPatient.weight,
+  medicalHistory: dbPatient.medical_history,
+  medications: dbPatient.medications,
+  lastVisitDate: dbPatient.last_visit_date,
+  startDate: dbPatient.start_date,
+  notes: dbPatient.notes,
+})
+
+export const mapPatientRecordFromDB = (
+  dbRecord: PatientRecordDB,
+  customEvals: CustomEvaluationDB[],
+): PatientRecord => ({
+  id: dbRecord.id,
+  patientId: dbRecord.patient_id,
+  date: dbRecord.date,
+  sessionId: dbRecord.session_id,
+  standardEvaluations: dbRecord.standard_evaluations as StandardEvaluations,
+  customEvaluations: customEvals.map(mapCustomEvaluationFromDB),
+  note: dbRecord.note,
+})
+
+export const mapCustomEvaluationFromDB = (dbEval: CustomEvaluationDB): CustomEvaluation => ({
+  id: dbEval.id,
+  name: dbEval.name,
+  value: dbEval.value,
+  unit: dbEval.unit,
+  direction: dbEval.direction,
+  min: dbEval.min_value,
+  max: dbEval.max_value,
+  tags: dbEval.tags,
+  note: dbEval.note,
+})

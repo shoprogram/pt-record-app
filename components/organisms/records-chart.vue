@@ -9,7 +9,7 @@
     <div v-else class="space-y-6">
       <!-- VAS -->
       <div v-if="hasVAS">
-        <h4 class="mb-3 text-sm font-medium text-text-secondary">VAS (痛み)</h4>
+        <h4 class="mb-3 text-sm font-medium text-text-secondary">{{ $t('evaluations.standard.vasLabel') }}</h4>
         <div class="flex h-32 items-end gap-2">
           <div v-for="record in recordsWithVAS" :key="record.id" class="flex flex-1 flex-col items-center">
             <div
@@ -25,7 +25,7 @@
 
       <!-- NRS -->
       <div v-if="hasNRS">
-        <h4 class="mb-3 text-sm font-medium text-text-secondary">NRS (痛み)</h4>
+        <h4 class="mb-3 text-sm font-medium text-text-secondary">{{ $t('evaluations.standard.nrsLabel') }}</h4>
         <div class="flex h-32 items-end gap-2">
           <div v-for="record in recordsWithNRS" :key="record.id" class="flex flex-1 flex-col items-center">
             <div
@@ -41,7 +41,7 @@
 
       <!-- ROM -->
       <div v-if="hasROM">
-        <h4 class="mb-3 text-sm font-medium text-text-secondary">ROM (関節可動域)</h4>
+        <h4 class="mb-3 text-sm font-medium text-text-secondary">{{ $t('evaluations.standard.romLabel') }}</h4>
         <div class="flex h-32 items-end gap-2">
           <div v-for="record in recordsWithROM" :key="record.id" class="flex flex-1 flex-col items-center">
             <div
@@ -57,7 +57,7 @@
 
       <!-- MMT -->
       <div v-if="hasMMT">
-        <h4 class="mb-3 text-sm font-medium text-text-secondary">MMT (筋力)</h4>
+        <h4 class="mb-3 text-sm font-medium text-text-secondary">{{ $t('evaluations.standard.mmtLabel') }}</h4>
         <div class="flex h-32 items-end gap-2">
           <div v-for="record in recordsWithMMT" :key="record.id" class="flex flex-1 flex-col items-center">
             <div
@@ -73,7 +73,7 @@
 
       <!-- Barthel Index -->
       <div v-if="hasBarthel">
-        <h4 class="mb-3 text-sm font-medium text-text-secondary">Barthel Index</h4>
+        <h4 class="mb-3 text-sm font-medium text-text-secondary">{{ $t('evaluations.standard.barthelIndex') }}</h4>
         <div class="flex h-32 items-end gap-2">
           <div v-for="record in recordsWithBarthel" :key="record.id" class="flex flex-1 flex-col items-center">
             <div

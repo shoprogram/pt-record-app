@@ -1,102 +1,8 @@
-import type { PatientRecord } from '~/types/api/patient'
+import type { PatientRecordDB, CustomEvaluationDB } from '~/types/api/patient'
+import { mapPatientRecordFromDB } from '~/types/api/patient'
 
-// ダミーデータ: 患者の記録一覧（1日複数レコード対応）
-const dummyRecords: Record<string, PatientRecord[]> = {
-  '1': [
-    {
-      id: 'r1',
-      patientId: '1',
-      date: '2025-01-15',
-      sessionId: 'session-1',
-      standardEvaluations: {
-        rom: 85,
-        mmt: 4,
-        vas: 60,
-        nrs: 6,
-        tug: null,
-        tenMeterWalk: null,
-        sixMinuteWalk: null,
-        barthelIndex: 85,
-        bergBalanceScale: null,
-      },
-      customEvaluations: [
-        {
-          id: 'custom-1',
-          name: '膝の可動域',
-          value: 120,
-          unit: 'degree',
-          direction: 'higher_is_better',
-          min: 0,
-          max: 150,
-          tags: ['膝'],
-          note: '右膝',
-        },
-      ],
-      note: '可動域が改善してきている。',
-    },
-    {
-      id: 'r2',
-      patientId: '1',
-      date: '2025-01-15',
-      sessionId: 'session-2',
-      standardEvaluations: {
-        rom: 80,
-        mmt: 3,
-        vas: 70,
-        nrs: 7,
-        tug: 15.5,
-        tenMeterWalk: 12.3,
-        sixMinuteWalk: null,
-        barthelIndex: 80,
-        bergBalanceScale: 45,
-      },
-      customEvaluations: [],
-      note: '午後の評価。歩行能力が向上。',
-    },
-    {
-      id: 'r3',
-      patientId: '1',
-      date: '2025-01-10',
-      sessionId: 'session-1',
-      standardEvaluations: {
-        rom: 75,
-        mmt: 3,
-        vas: 70,
-        nrs: 7,
-        tug: null,
-        tenMeterWalk: null,
-        sixMinuteWalk: null,
-        barthelIndex: 75,
-        bergBalanceScale: null,
-      },
-      customEvaluations: [],
-      note: '痛みがやや強い。',
-    },
-  ],
-  '2': [
-    {
-      id: 'r4',
-      patientId: '2',
-      date: '2025-01-14',
-      sessionId: 'session-1',
-      standardEvaluations: {
-        rom: 90,
-        mmt: 4,
-        vas: 50,
-        nrs: 5,
-        tug: null,
-        tenMeterWalk: null,
-        sixMinuteWalk: null,
-        barthelIndex: 90,
-        bergBalanceScale: null,
-      },
-      customEvaluations: [],
-      note: '肩の可動域が改善。',
-    },
-  ],
-}
-
-export default defineEventHandler((event) => {
+export default defineEventHandler(async (event) => {
+  const { client } = await getAuthenticatedSupabase(event)
   const id = getRouterParam(event, 'id')
 
   if (!id) {
@@ -106,15 +12,73 @@ export default defineEventHandler((event) => {
     })
   }
 
-  const records = dummyRecords[id] || []
+  // First, verify the patient exists and belongs to the user
+  const { data: patient, error: patientError } = await client.from('patients').select('id').eq('id', id).single()
 
-  // 日付とセッションIDでソート（新しい順）
-  return {
-    records: records.sort((a, b) => {
-      if (a.date !== b.date) {
-        return a.date > b.date ? -1 : 1
+  if (patientError || !patient) {
+    throw createError({
+      statusCode: 404,
+      statusMessage: '患者が見つかりません',
+    })
+  }
+
+  // Fetch patient records
+  const { data: recordsData, error: recordsError } = await client
+    .from('patient_records')
+    .select('*')
+    .eq('patient_id', id)
+    .order('date', { ascending: false })
+    .order('session_id', { ascending: false })
+
+  if (recordsError) {
+    throw createError({
+      statusCode: 500,
+      statusMessage: '記録の取得に失敗しました',
+      data: recordsError,
+    })
+  }
+
+  const dbRecords = recordsData as PatientRecordDB[]
+
+  // Fetch all custom evaluations for these records
+  const recordIds = dbRecords.map((r) => r.id)
+  let customEvalsData: CustomEvaluationDB[] = []
+
+  if (recordIds.length > 0) {
+    const { data: evalsData, error: evalsError } = await client
+      .from('custom_evaluations')
+      .select('*')
+      .in('patient_record_id', recordIds)
+
+    if (evalsError) {
+      throw createError({
+        statusCode: 500,
+        statusMessage: 'カスタム評価の取得に失敗しました',
+        data: evalsError,
+      })
+    }
+
+    customEvalsData = evalsData as CustomEvaluationDB[]
+  }
+
+  // Group custom evaluations by record ID
+  const customEvalsByRecordId = customEvalsData.reduce(
+    (acc, evaluation) => {
+      if (!acc[evaluation.patient_record_id]) {
+        acc[evaluation.patient_record_id] = []
       }
-      return (a.sessionId || '') > (b.sessionId || '') ? -1 : 1
-    }),
+      acc[evaluation.patient_record_id]?.push(evaluation)
+      return acc
+    },
+    {} as Record<string, CustomEvaluationDB[]>,
+  )
+
+  // Map to API types
+  const records = dbRecords.map((dbRecord) =>
+    mapPatientRecordFromDB(dbRecord, customEvalsByRecordId[dbRecord.id] || []),
+  )
+
+  return {
+    records,
   }
 })

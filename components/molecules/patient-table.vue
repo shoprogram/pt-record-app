@@ -25,7 +25,9 @@
           <td class="border-b border-border-light px-4 py-3 text-sm text-text-primary">
             {{ patient.name }}
           </td>
-          <td class="border-b border-border-light px-4 py-3 text-sm text-text-secondary">{{ patient.age }}歳</td>
+          <td class="border-b border-border-light px-4 py-3 text-sm text-text-secondary">
+            {{ patient.age }}{{ $t('patients.list.ageSuffix') }}
+          </td>
           <td class="border-b border-border-light px-4 py-3 text-sm text-text-secondary">
             {{ patient.gender }}
           </td>

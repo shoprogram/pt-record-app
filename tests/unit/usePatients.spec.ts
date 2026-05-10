@@ -1,11 +1,29 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
+import { setActivePinia, createPinia } from 'pinia'
 import type { PatientsResponse } from '~/types'
+import { usePatientsStore } from '~/stores/patients'
 
-// useFetchをグローバルにモック
-const mockUseFetch = vi.fn()
-// @ts-expect-error - グローバル変数として定義
-globalThis.useFetch = (...args: unknown[]) => mockUseFetch(...args)
+// useRouterをモック
+const mockPush = vi.fn()
+vi.stubGlobal('useRouter', () => ({
+  push: mockPush,
+}))
+
+// onMountedをモック
+vi.stubGlobal('onMounted', (callback: () => void) => {
+  callback()
+})
+
+// watchをグローバルに公開
+vi.stubGlobal('watch', watch)
+
+// $fetchをモック
+const mockFetch = vi.fn()
+vi.stubGlobal('$fetch', mockFetch)
+
+// usePatientsStoreをグローバルに公開
+vi.stubGlobal('usePatientsStore', usePatientsStore)
 
 describe('usePatients', () => {
   const mockPatients: PatientsResponse = {
@@ -32,88 +50,81 @@ describe('usePatients', () => {
   }
 
   beforeEach(() => {
+    setActivePinia(createPinia())
     vi.clearAllMocks()
   })
 
   it('検索クエリが空の場合、すべての患者を取得する', async () => {
     // Arrange
     const searchQuery = ref('')
-    mockUseFetch.mockReturnValue({
-      data: ref(mockPatients),
-      pending: ref(false),
-      error: ref(null),
-    })
+    mockFetch.mockResolvedValue(mockPatients)
 
     // Act
     const { usePatients } = await import('~/composables/usePatients')
     const { data, error, isLoading } = usePatients(searchQuery)
 
     // Assert
-    expect(data.value).toEqual(mockPatients)
-    expect(error.value).toBeNull()
-    expect(isLoading.value).toBe(false)
+    await vi.waitFor(() => {
+      expect(data.value).toEqual(mockPatients)
+      expect(error.value).toBeNull()
+      expect(isLoading.value).toBe(false)
+    })
   })
 
   it('検索クエリで患者をフィルタリングする', async () => {
     // Arrange
     const searchQuery = ref('患者A')
-    const firstPatient = mockPatients.patients[0]
-    if (!firstPatient) throw new Error('Test data not found')
-
-    const filteredPatients: PatientsResponse = {
-      patients: [firstPatient],
-    }
-    mockUseFetch.mockReturnValue({
-      data: ref(filteredPatients),
-      pending: ref(false),
-      error: ref(null),
-    })
+    mockFetch.mockResolvedValue(mockPatients)
 
     // Act
     const { usePatients } = await import('~/composables/usePatients')
-    const { data, error, isLoading } = usePatients(searchQuery)
+    const { data } = usePatients(searchQuery)
 
     // Assert
-    expect(data.value?.patients).toHaveLength(1)
-    expect(data.value?.patients[0]?.name).toBe('患者A')
-    expect(error.value).toBeNull()
-    expect(isLoading.value).toBe(false)
+    await vi.waitFor(() => {
+      expect(data.value?.patients).toHaveLength(1)
+      expect(data.value?.patients[0]?.name).toBe('患者A')
+    })
   })
 
   it('APIエラー時にエラーメッセージを返す', async () => {
     // Arrange
     const searchQuery = ref('')
     const apiError = new Error('ネットワークエラー')
-    mockUseFetch.mockReturnValue({
-      data: ref(null),
-      pending: ref(false),
-      error: ref(apiError),
-    })
+    mockFetch.mockRejectedValue(apiError)
 
     // Act
     const { usePatients } = await import('~/composables/usePatients')
     const { data, error, isLoading } = usePatients(searchQuery)
 
     // Assert
-    expect(data.value).toBeNull()
-    expect(error.value).toBe('ネットワークエラー')
-    expect(isLoading.value).toBe(false)
+    await vi.waitFor(() => {
+      expect(data.value).toBeNull()
+      expect(error.value).toBe('ネットワークエラー')
+      expect(isLoading.value).toBe(false)
+    })
   })
 
   it('ローディング中はisLoadingがtrueになる', async () => {
     // Arrange
     const searchQuery = ref('')
-    mockUseFetch.mockReturnValue({
-      data: ref(null),
-      pending: ref(true),
-      error: ref(null),
-    })
+    let resolveFetch: (value: PatientsResponse) => void
+    mockFetch.mockReturnValue(
+      new Promise<PatientsResponse>((resolve) => {
+        resolveFetch = resolve
+      }),
+    )
 
     // Act
     const { usePatients } = await import('~/composables/usePatients')
     const { isLoading } = usePatients(searchQuery)
 
-    // Assert
-    expect(isLoading.value).toBe(true)
+    // Assert - ローディング中
+    await vi.waitFor(() => {
+      expect(isLoading.value).toBe(true)
+    })
+
+    // Cleanup - プロミスを解決
+    resolveFetch!(mockPatients)
   })
 })

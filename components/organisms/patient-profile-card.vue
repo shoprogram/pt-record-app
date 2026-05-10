@@ -24,7 +24,9 @@
         <p class="mb-1 text-sm text-text-secondary">
           {{ ageLabel }}
         </p>
-        <p class="text-base font-medium text-text-primary">{{ patient.age }}歳</p>
+        <p class="text-base font-medium text-text-primary">
+          {{ patient.age }}{{ $t('patients.detail.profile.ageSuffix') }}
+        </p>
       </div>
       <div>
         <p class="mb-1 text-sm text-text-secondary">
@@ -51,15 +53,19 @@
         </p>
       </div>
       <div v-if="patient.height">
-        <p class="mb-1 text-sm text-text-secondary">身長</p>
-        <p class="text-base font-medium text-text-primary">{{ patient.height }}cm</p>
+        <p class="mb-1 text-sm text-text-secondary">{{ $t('patients.detail.profile.height') }}</p>
+        <p class="text-base font-medium text-text-primary">
+          {{ patient.height }}{{ $t('patients.detail.profile.heightUnit') }}
+        </p>
       </div>
       <div v-if="patient.weight">
-        <p class="mb-1 text-sm text-text-secondary">体重</p>
-        <p class="text-base font-medium text-text-primary">{{ patient.weight }}kg</p>
+        <p class="mb-1 text-sm text-text-secondary">{{ $t('patients.detail.profile.weight') }}</p>
+        <p class="text-base font-medium text-text-primary">
+          {{ patient.weight }}{{ $t('patients.detail.profile.weightUnit') }}
+        </p>
       </div>
       <div v-if="patient.medicalHistory" class="col-span-2">
-        <p class="mb-1 text-sm text-text-secondary">既往歴・服薬</p>
+        <p class="mb-1 text-sm text-text-secondary">{{ $t('patients.detail.profile.medicalHistory') }}</p>
         <p class="text-base text-text-primary">
           {{ patient.medicalHistory }}
         </p>

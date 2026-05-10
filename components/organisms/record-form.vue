@@ -20,20 +20,21 @@
 
       <!-- 標準評価 -->
       <div>
-        <h4 class="mb-3 text-base font-semibold text-text-primary">標準評価</h4>
+        <h4 class="mb-3 text-base font-semibold text-text-primary">{{ $t('evaluations.standard.title') }}</h4>
         <div class="space-y-4">
           <div class="grid grid-cols-2 gap-4">
             <!-- ROM -->
             <div>
               <label class="mb-2 block text-sm font-medium text-text-primary">
-                ROM (関節可動域) <span class="text-xs text-text-secondary">(degree)</span>
+                {{ $t('evaluations.standard.rom') }}
+                <span class="text-xs text-text-secondary">({{ $t('evaluations.standard.romUnit') }})</span>
               </label>
               <input
                 :value="form.standardEvaluations.rom ?? ''"
                 type="number"
                 :min="romMin"
                 :max="romMax"
-                placeholder="未入力"
+                :placeholder="$t('evaluations.standard.placeholder')"
                 class="w-full rounded-lg border border-border-light px-4 py-2 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-primary"
                 @input="
                   updateStandardEvaluation(
@@ -49,14 +50,15 @@
             <!-- MMT -->
             <div>
               <label class="mb-2 block text-sm font-medium text-text-primary">
-                MMT (筋力) <span class="text-xs text-text-secondary">(0-5)</span>
+                {{ $t('evaluations.standard.mmt') }}
+                <span class="text-xs text-text-secondary">({{ $t('evaluations.standard.mmtRange') }})</span>
               </label>
               <input
                 :value="form.standardEvaluations.mmt ?? ''"
                 type="number"
                 :min="mmtMin"
                 :max="mmtMax"
-                placeholder="未入力"
+                :placeholder="$t('evaluations.standard.placeholder')"
                 class="w-full rounded-lg border border-border-light px-4 py-2 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-primary"
                 @input="
                   updateStandardEvaluation(
@@ -72,14 +74,15 @@
             <!-- VAS -->
             <div>
               <label class="mb-2 block text-sm font-medium text-text-primary">
-                VAS (痛み) <span class="text-xs text-text-secondary">(0-100)</span>
+                {{ $t('evaluations.standard.vas') }}
+                <span class="text-xs text-text-secondary">({{ $t('evaluations.standard.vasRange') }})</span>
               </label>
               <input
                 :value="form.standardEvaluations.vas ?? ''"
                 type="number"
                 :min="vasMin"
                 :max="vasMax"
-                placeholder="未入力"
+                :placeholder="$t('evaluations.standard.placeholder')"
                 class="w-full rounded-lg border border-border-light px-4 py-2 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-primary"
                 @input="
                   updateStandardEvaluation(
@@ -95,14 +98,15 @@
             <!-- NRS -->
             <div>
               <label class="mb-2 block text-sm font-medium text-text-primary">
-                NRS (痛み) <span class="text-xs text-text-secondary">(0-10)</span>
+                {{ $t('evaluations.standard.nrs') }}
+                <span class="text-xs text-text-secondary">({{ $t('evaluations.standard.nrsRange') }})</span>
               </label>
               <input
                 :value="form.standardEvaluations.nrs ?? ''"
                 type="number"
                 :min="nrsMin"
                 :max="nrsMax"
-                placeholder="未入力"
+                :placeholder="$t('evaluations.standard.placeholder')"
                 class="w-full rounded-lg border border-border-light px-4 py-2 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-primary"
                 @input="
                   updateStandardEvaluation(
@@ -117,14 +121,16 @@
 
             <!-- TUG -->
             <div>
-              <label class="mb-2 block text-sm font-medium text-text-primary"> TUG (秒) </label>
+              <label class="mb-2 block text-sm font-medium text-text-primary">
+                {{ $t('evaluations.standard.tug') }} ({{ $t('evaluations.standard.tugUnit') }})
+              </label>
               <input
                 :value="form.standardEvaluations.tug ?? ''"
                 type="number"
                 :min="tugMin"
                 :max="tugMax"
                 step="0.1"
-                placeholder="未入力"
+                :placeholder="$t('evaluations.standard.placeholder')"
                 class="w-full rounded-lg border border-border-light px-4 py-2 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-primary"
                 @input="
                   updateStandardEvaluation(
@@ -139,14 +145,16 @@
 
             <!-- 10m歩行 -->
             <div>
-              <label class="mb-2 block text-sm font-medium text-text-primary"> 10m歩行 (秒) </label>
+              <label class="mb-2 block text-sm font-medium text-text-primary">
+                {{ $t('evaluations.standard.tenMeterWalk') }} ({{ $t('evaluations.standard.tenMeterWalkUnit') }})
+              </label>
               <input
                 :value="form.standardEvaluations.tenMeterWalk ?? ''"
                 type="number"
                 :min="tenMeterWalkMin"
                 :max="tenMeterWalkMax"
                 step="0.1"
-                placeholder="未入力"
+                :placeholder="$t('evaluations.standard.placeholder')"
                 class="w-full rounded-lg border border-border-light px-4 py-2 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-primary"
                 @input="
                   updateStandardEvaluation(
@@ -161,13 +169,15 @@
 
             <!-- 6分間歩行 -->
             <div>
-              <label class="mb-2 block text-sm font-medium text-text-primary"> 6分間歩行 (m) </label>
+              <label class="mb-2 block text-sm font-medium text-text-primary">
+                {{ $t('evaluations.standard.sixMinuteWalk') }} ({{ $t('evaluations.standard.sixMinuteWalkUnit') }})
+              </label>
               <input
                 :value="form.standardEvaluations.sixMinuteWalk ?? ''"
                 type="number"
                 :min="sixMinuteWalkMin"
                 :max="sixMinuteWalkMax"
-                placeholder="未入力"
+                :placeholder="$t('evaluations.standard.placeholder')"
                 class="w-full rounded-lg border border-border-light px-4 py-2 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-primary"
                 @input="
                   updateStandardEvaluation(
@@ -182,13 +192,15 @@
 
             <!-- Barthel Index -->
             <div>
-              <label class="mb-2 block text-sm font-medium text-text-primary"> Barthel Index (0-100) </label>
+              <label class="mb-2 block text-sm font-medium text-text-primary">
+                {{ $t('evaluations.standard.barthelIndex') }} ({{ $t('evaluations.standard.barthelIndexRange') }})
+              </label>
               <input
                 :value="form.standardEvaluations.barthelIndex ?? ''"
                 type="number"
                 :min="barthelIndexMin"
                 :max="barthelIndexMax"
-                placeholder="未入力"
+                :placeholder="$t('evaluations.standard.placeholder')"
                 class="w-full rounded-lg border border-border-light px-4 py-2 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-primary"
                 @input="
                   updateStandardEvaluation(
@@ -203,13 +215,17 @@
 
             <!-- Berg Balance Scale -->
             <div>
-              <label class="mb-2 block text-sm font-medium text-text-primary"> Berg Balance Scale (0-56) </label>
+              <label class="mb-2 block text-sm font-medium text-text-primary">
+                {{ $t('evaluations.standard.bergBalanceScale') }} ({{
+                  $t('evaluations.standard.bergBalanceScaleRange')
+                }})
+              </label>
               <input
                 :value="form.standardEvaluations.bergBalanceScale ?? ''"
                 type="number"
                 :min="bergBalanceScaleMin"
                 :max="bergBalanceScaleMax"
-                placeholder="未入力"
+                :placeholder="$t('evaluations.standard.placeholder')"
                 class="w-full rounded-lg border border-border-light px-4 py-2 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-primary"
                 @input="
                   updateStandardEvaluation(
@@ -228,17 +244,17 @@
       <!-- カスタム評価 -->
       <div>
         <div class="mb-3 flex items-center justify-between">
-          <h4 class="text-base font-semibold text-text-primary">カスタム評価</h4>
+          <h4 class="text-base font-semibold text-text-primary">{{ $t('evaluations.custom.title') }}</h4>
           <button
             type="button"
             class="rounded-lg border border-primary bg-white px-4 py-2 text-sm text-primary transition-colors hover:bg-blue-50"
             @click="addCustomEvaluation"
           >
-            + 追加
+            {{ $t('evaluations.custom.add') }}
           </button>
         </div>
         <div v-if="form.customEvaluations.length === 0" class="py-4 text-center text-text-secondary">
-          カスタム評価がありません
+          {{ $t('evaluations.custom.empty') }}
         </div>
         <div v-else class="space-y-4">
           <div
@@ -247,15 +263,17 @@
             class="rounded-lg border border-border-light p-4"
           >
             <div class="mb-3 flex items-center justify-between">
-              <span class="text-sm font-medium text-text-primary">カスタム評価 {{ index + 1 }}</span>
+              <span class="text-sm font-medium text-text-primary"
+                >{{ $t('evaluations.custom.itemLabel') }} {{ index + 1 }}</span
+              >
               <button type="button" class="text-red-500 hover:text-red-700" @click="removeCustomEvaluation(custom.id)">
-                削除
+                {{ $t('evaluations.custom.remove') }}
               </button>
             </div>
             <div class="grid grid-cols-2 gap-4">
               <div>
                 <label class="mb-2 block text-sm font-medium text-text-primary">
-                  評価名 <span class="text-red-500">*</span>
+                  {{ $t('evaluations.custom.name') }} <span class="text-red-500">*</span>
                 </label>
                 <input
                   :value="custom.name"
@@ -267,7 +285,7 @@
               </div>
               <div>
                 <label class="mb-2 block text-sm font-medium text-text-primary">
-                  スコア値 <span class="text-red-500">*</span>
+                  {{ $t('evaluations.custom.value') }} <span class="text-red-500">*</span>
                 </label>
                 <input
                   :value="custom.value"
@@ -279,41 +297,43 @@
               </div>
               <div>
                 <label class="mb-2 block text-sm font-medium text-text-primary">
-                  単位 <span class="text-red-500">*</span>
+                  {{ $t('evaluations.custom.unit') }} <span class="text-red-500">*</span>
                 </label>
                 <select
                   :value="custom.unit"
                   class="w-full rounded-lg border border-border-light px-4 py-2 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-primary"
                   @change="updateCustomEvaluation(custom.id, 'unit', ($event.target as HTMLSelectElement).value)"
                 >
-                  <option value="none">なし</option>
-                  <option value="degree">degree</option>
-                  <option value="点">点</option>
-                  <option value="秒">秒</option>
-                  <option value="m">m</option>
-                  <option value="回">回</option>
-                  <option value="%">%</option>
+                  <option value="none">{{ $t('evaluations.custom.units.none') }}</option>
+                  <option value="degree">{{ $t('evaluations.custom.units.degree') }}</option>
+                  <option value="点">{{ $t('evaluations.custom.units.point') }}</option>
+                  <option value="秒">{{ $t('evaluations.custom.units.second') }}</option>
+                  <option value="m">{{ $t('evaluations.custom.units.meter') }}</option>
+                  <option value="回">{{ $t('evaluations.custom.units.times') }}</option>
+                  <option value="%">{{ $t('evaluations.custom.units.percent') }}</option>
                 </select>
               </div>
               <div>
                 <label class="mb-2 block text-sm font-medium text-text-primary">
-                  スコアの向き <span class="text-red-500">*</span>
+                  {{ $t('evaluations.custom.direction') }} <span class="text-red-500">*</span>
                 </label>
                 <select
                   :value="custom.direction"
                   class="w-full rounded-lg border border-border-light px-4 py-2 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-primary"
                   @change="updateCustomEvaluation(custom.id, 'direction', ($event.target as HTMLSelectElement).value)"
                 >
-                  <option value="higher_is_better">高い方が良い</option>
-                  <option value="lower_is_better">低い方が良い</option>
+                  <option value="higher_is_better">{{ $t('evaluations.custom.directions.higher') }}</option>
+                  <option value="lower_is_better">{{ $t('evaluations.custom.directions.lower') }}</option>
                 </select>
               </div>
               <div>
-                <label class="mb-2 block text-sm font-medium text-text-primary"> 最小値 </label>
+                <label class="mb-2 block text-sm font-medium text-text-primary">
+                  {{ $t('evaluations.custom.min') }}
+                </label>
                 <input
                   :value="custom.min ?? ''"
                   type="number"
-                  placeholder="未設定"
+                  :placeholder="$t('evaluations.custom.placeholder.min')"
                   class="w-full rounded-lg border border-border-light px-4 py-2 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-primary"
                   @input="
                     updateCustomEvaluation(
@@ -327,11 +347,13 @@
                 />
               </div>
               <div>
-                <label class="mb-2 block text-sm font-medium text-text-primary"> 最大値 </label>
+                <label class="mb-2 block text-sm font-medium text-text-primary">
+                  {{ $t('evaluations.custom.max') }}
+                </label>
                 <input
                   :value="custom.max ?? ''"
                   type="number"
-                  placeholder="未設定"
+                  :placeholder="$t('evaluations.custom.placeholder.max')"
                   class="w-full rounded-lg border border-border-light px-4 py-2 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-primary"
                   @input="
                     updateCustomEvaluation(
@@ -346,7 +368,9 @@
               </div>
             </div>
             <div class="mt-4">
-              <label class="mb-2 block text-sm font-medium text-text-primary"> メモ </label>
+              <label class="mb-2 block text-sm font-medium text-text-primary">
+                {{ $t('evaluations.custom.note') }}
+              </label>
               <textarea
                 :value="custom.note ?? ''"
                 rows="2"

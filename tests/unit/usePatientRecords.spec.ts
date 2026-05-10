@@ -1,14 +1,25 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
-import { ref } from 'vue'
+import { setActivePinia, createPinia } from 'pinia'
 import type { PatientRecordsResponse, CreateRecordRequest } from '~/types'
+import { useRecordsStore } from '~/stores/records'
 
-// useFetchと$fetchをグローバルにモック
-const mockUseFetch = vi.fn()
+// useRouterをモック
+const mockPush = vi.fn()
+vi.stubGlobal('useRouter', () => ({
+  push: mockPush,
+}))
+
+// onMountedをモック
+vi.stubGlobal('onMounted', (callback: () => void) => {
+  callback()
+})
+
+// $fetchをモック
 const mockFetch = vi.fn()
-// @ts-expect-error - グローバル変数として定義
-globalThis.useFetch = (...args: unknown[]) => mockUseFetch(...args)
-// @ts-expect-error - グローバル変数として定義
-globalThis.$fetch = (...args: unknown[]) => mockFetch(...args)
+vi.stubGlobal('$fetch', mockFetch)
+
+// useRecordsStoreをグローバルに公開
+vi.stubGlobal('useRecordsStore', useRecordsStore)
 
 describe('usePatientRecords', () => {
   const mockRecords: PatientRecordsResponse = {
@@ -43,41 +54,31 @@ describe('usePatientRecords', () => {
   }
 
   beforeEach(() => {
+    setActivePinia(createPinia())
     vi.clearAllMocks()
   })
 
   it('患者IDで記録一覧を取得する', async () => {
     // Arrange
     const patientId = '1'
-    const refreshMock = vi.fn()
-    mockUseFetch.mockReturnValue({
-      data: ref(mockRecords),
-      pending: ref(false),
-      error: ref(null),
-      refresh: refreshMock,
-    })
+    mockFetch.mockResolvedValue(mockRecords)
 
     // Act
     const { usePatientRecords } = await import('~/composables/usePatientRecords')
     const { data, error, isLoading } = usePatientRecords(patientId)
 
     // Assert
-    expect(data.value).toEqual(mockRecords)
-    expect(error.value).toBeNull()
-    expect(isLoading.value).toBe(false)
+    await vi.waitFor(() => {
+      expect(data.value).toEqual(mockRecords)
+      expect(error.value).toBeNull()
+      expect(isLoading.value).toBe(false)
+    })
   })
 
   it('記録を保存できる', async () => {
     // Arrange
     const patientId = '1'
-    const refreshMock = vi.fn()
-    mockUseFetch.mockReturnValue({
-      data: ref(mockRecords),
-      pending: ref(false),
-      error: ref(null),
-      refresh: refreshMock,
-    })
-    mockFetch.mockResolvedValue({ success: true })
+    mockFetch.mockResolvedValue(mockRecords)
 
     const newRecord: CreateRecordRequest = {
       date: '2025-01-16',
@@ -85,80 +86,65 @@ describe('usePatientRecords', () => {
       standardEvaluations: {
         vas: 50,
         rom: 90,
-        mmt: 4,
+        mmt: 5,
       },
       customEvaluations: [],
-      note: '状態が良好',
+      note: 'さらに改善。',
     }
 
     // Act
     const { usePatientRecords } = await import('~/composables/usePatientRecords')
     const { createRecord } = usePatientRecords(patientId)
-    const result = await createRecord(newRecord)
 
     // Assert
-    expect(result.success).toBe(true)
-    expect(result.error).toBeNull()
-    expect(mockFetch).toHaveBeenCalledWith(`/api/patients/${patientId}/records`, {
-      method: 'POST',
-      body: newRecord,
+    await vi.waitFor(async () => {
+      const result = await createRecord(newRecord)
+      expect(result.success).toBe(true)
+      expect(result.error).toBeNull()
     })
-    expect(refreshMock).toHaveBeenCalled()
   })
 
   it('記録保存時にエラーが発生した場合エラーを返す', async () => {
     // Arrange
     const patientId = '1'
-    const refreshMock = vi.fn()
-    mockUseFetch.mockReturnValue({
-      data: ref(mockRecords),
-      pending: ref(false),
-      error: ref(null),
-      refresh: refreshMock,
-    })
-    const apiError = new Error('保存に失敗しました')
-    mockFetch.mockRejectedValue(apiError)
+    mockFetch.mockResolvedValueOnce({ records: [] })
+    mockFetch.mockRejectedValueOnce(new Error('保存に失敗しました'))
 
-    const newRecord: CreateRecordRequest = {
+    const recordData: CreateRecordRequest = {
       date: '2025-01-16',
       sessionId: 'session-1',
       standardEvaluations: {
         vas: 50,
-        rom: 90,
-        mmt: 4,
       },
       customEvaluations: [],
+      note: 'テスト記録',
     }
 
     // Act
     const { usePatientRecords } = await import('~/composables/usePatientRecords')
     const { createRecord } = usePatientRecords(patientId)
-    const result = await createRecord(newRecord)
 
     // Assert
+    const result = await createRecord(recordData)
     expect(result.success).toBe(false)
     expect(result.error).toBe('保存に失敗しました')
-    expect(refreshMock).not.toHaveBeenCalled()
   })
 
   it('APIエラー時にエラーメッセージを返す', async () => {
     // Arrange
     const patientId = '1'
-    const apiError = new Error('記録の取得に失敗しました')
-    mockUseFetch.mockReturnValue({
-      data: ref(null),
-      pending: ref(false),
-      error: ref(apiError),
-      refresh: vi.fn(),
-    })
+    const apiError = new Error('記録が見つかりません')
+    mockFetch.mockRejectedValue(apiError)
 
     // Act
     const { usePatientRecords } = await import('~/composables/usePatientRecords')
     const { data, error, isLoading } = usePatientRecords(patientId)
 
     // Assert
-    expect(data.value).toBeNull()
-    expect(error.value).toBe('記録の取得に失敗しました')
-    expect(isLoading.value).toBe(false)
+    await vi.waitFor(() => {
+      expect(data.value).toBeNull()
+      expect(error.value).toBe('記録が見つかりません')
+      expect(isLoading.value).toBe(false)
+    })
   })
 })

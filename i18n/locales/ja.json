@@ -21,7 +21,25 @@
         "lastVisitDate": "最終来院日",
         "action": "操作"
       },
-      "viewDetail": "詳細を見る"
+      "viewDetail": "詳細を見る",
+      "ageSuffix": "歳"
+    },
+    "create": {
+      "button": "新規患者登録",
+      "title": "新規患者登録",
+      "code": "患者コード",
+      "name": "名前",
+      "age": "年齢",
+      "gender": "性別",
+      "diagnosis": "診断名",
+      "height": "身長",
+      "weight": "体重",
+      "startDate": "開始日",
+      "medicalHistory": "既往歴・服薬",
+      "notes": "備考",
+      "cancel": "キャンセル",
+      "submit": "登録する",
+      "creating": "登録中..."
     },
     "detail": {
       "title": "患者詳細",
@@ -33,7 +51,13 @@
         "gender": "性別",
         "diagnosis": "診断名",
         "startDate": "開始日",
-        "notes": "備考"
+        "notes": "備考",
+        "height": "身長",
+        "weight": "体重",
+        "medicalHistory": "既往歴・服薬",
+        "heightUnit": "cm",
+        "weightUnit": "kg",
+        "ageSuffix": "歳"
       },
       "todayRecord": {
         "title": "今日の記録",
@@ -65,10 +89,100 @@
       }
     }
   },
+  "evaluations": {
+    "standard": {
+      "title": "標準評価",
+      "rom": "ROM (関節可動域)",
+      "romUnit": "degree",
+      "mmt": "MMT (筋力)",
+      "mmtRange": "0-5",
+      "vas": "VAS (痛み)",
+      "vasRange": "0-100",
+      "nrs": "NRS (痛み)",
+      "nrsRange": "0-10",
+      "tug": "TUG",
+      "tugUnit": "秒",
+      "tenMeterWalk": "10m歩行",
+      "tenMeterWalkUnit": "秒",
+      "sixMinuteWalk": "6分間歩行",
+      "sixMinuteWalkUnit": "m",
+      "barthelIndex": "Barthel Index",
+      "barthelIndexRange": "0-100",
+      "bergBalanceScale": "Berg Balance Scale",
+      "bergBalanceScaleRange": "0-56",
+      "placeholder": "未入力",
+      "romLabel": "ROM (関節可動域)",
+      "mmtLabel": "MMT (筋力)",
+      "vasLabel": "VAS (痛み)",
+      "nrsLabel": "NRS (痛み)"
+    },
+    "custom": {
+      "title": "カスタム評価",
+      "add": "+ 追加",
+      "remove": "削除",
+      "empty": "カスタム評価がありません",
+      "itemLabel": "カスタム評価",
+      "name": "評価名",
+      "value": "スコア値",
+      "unit": "単位",
+      "direction": "スコアの向き",
+      "min": "最小値",
+      "max": "最大値",
+      "note": "メモ",
+      "units": {
+        "none": "なし",
+        "degree": "degree",
+        "point": "点",
+        "second": "秒",
+        "meter": "m",
+        "times": "回",
+        "percent": "%"
+      },
+      "directions": {
+        "higher": "高い方が良い",
+        "lower": "低い方が良い"
+      },
+      "placeholder": {
+        "min": "未設定",
+        "max": "未設定"
+      }
+    }
+  },
   "common": {
     "error": {
       "fetchFailed": "データの取得に失敗しました",
       "saveFailed": "保存に失敗しました"
     }
+  },
+  "login": {
+    "title": "PT記録アプリ",
+    "subtitle": "理学療法士用患者記録システム",
+    "email": "メールアドレス",
+    "emailPlaceholder": "メールアドレスを入力してください",
+    "password": "パスワード",
+    "passwordPlaceholder": "パスワードを入力してください",
+    "loginButton": "ログイン",
+    "loggingIn": "ログイン中...",
+    "error": "ログインに失敗しました",
+    "defaultError": "メールアドレスまたはパスワードが正しくありません",
+    "footer": "© 2026 PT記録アプリ",
+    "noAccount": "アカウントをお持ちでない方",
+    "signUpLink": "新規登録"
+  },
+  "signup": {
+    "title": "アカウント登録",
+    "subtitle": "PT記録アプリに新規登録",
+    "email": "メールアドレス",
+    "emailPlaceholder": "メールアドレスを入力してください",
+    "password": "パスワード",
+    "passwordPlaceholder": "パスワードを入力してください",
+    "confirmPassword": "パスワード（確認）",
+    "confirmPasswordPlaceholder": "もう一度パスワードを入力してください",
+    "signupButton": "登録する",
+    "signingUp": "登録中...",
+    "error": "登録に失敗しました",
+    "passwordMismatch": "パスワードが一致しません",
+    "hasAccount": "既にアカウントをお持ちの方",
+    "loginLink": "ログイン"
   }
 }
