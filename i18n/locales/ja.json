@@ -1,6 +1,6 @@
 {
   "app": {
-    "name": "PT記録アプリ"
+    "name": "セラピスト記録アプリ"
   },
   "nav": {
     "patients": "患者一覧"
@@ -155,7 +155,7 @@
     }
   },
   "login": {
-    "title": "PT記録アプリ",
+    "title": "セラピスト記録アプリ",
     "subtitle": "理学療法士用患者記録システム",
     "email": "メールアドレス",
     "emailPlaceholder": "メールアドレスを入力してください",
@@ -165,13 +165,13 @@
     "loggingIn": "ログイン中...",
     "error": "ログインに失敗しました",
     "defaultError": "メールアドレスまたはパスワードが正しくありません",
-    "footer": "© 2026 PT記録アプリ",
+    "footer": "© 2026 セラピスト記録アプリ",
     "noAccount": "アカウントをお持ちでない方",
     "signUpLink": "新規登録"
   },
   "signup": {
     "title": "アカウント登録",
-    "subtitle": "PT記録アプリに新規登録",
+    "subtitle": "セラピスト記録アプリに新規登録",
     "email": "メールアドレス",
     "emailPlaceholder": "メールアドレスを入力してください",
     "password": "パスワード",
