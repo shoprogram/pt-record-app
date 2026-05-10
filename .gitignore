@@ -23,6 +23,8 @@ docs/debug/*.png
 docs/debug/*.jpg
 docs/debug/*.jpeg
 playwright-report
+test-results
+playwright/.auth
 
 # Local env files
 .env

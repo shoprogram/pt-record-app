@@ -17,7 +17,7 @@
 
         <!-- 標準評価 -->
         <div v-if="hasStandardEvaluations(record)" class="mb-3">
-          <h5 class="mb-2 text-xs font-medium text-text-secondary">標準評価</h5>
+          <h5 class="mb-2 text-xs font-medium text-text-secondary">{{ $t('evaluations.standard.title') }}</h5>
           <div class="grid grid-cols-3 gap-2 text-sm">
             <div v-if="record.standardEvaluations.rom !== null && record.standardEvaluations.rom !== undefined">
               <span class="text-text-secondary">ROM:</span>
@@ -36,8 +36,10 @@
               <span class="ml-1 text-text-primary">{{ record.standardEvaluations.nrs }}</span>
             </div>
             <div v-if="record.standardEvaluations.tug !== null && record.standardEvaluations.tug !== undefined">
-              <span class="text-text-secondary">TUG:</span>
-              <span class="ml-1 text-text-primary">{{ record.standardEvaluations.tug }}秒</span>
+              <span class="text-text-secondary">{{ $t('evaluations.standard.tug') }}:</span>
+              <span class="ml-1 text-text-primary"
+                >{{ record.standardEvaluations.tug }}{{ $t('evaluations.standard.tugUnit') }}</span
+              >
             </div>
             <div
               v-if="
@@ -45,8 +47,10 @@
                 record.standardEvaluations.tenMeterWalk !== undefined
               "
             >
-              <span class="text-text-secondary">10m歩行:</span>
-              <span class="ml-1 text-text-primary">{{ record.standardEvaluations.tenMeterWalk }}秒</span>
+              <span class="text-text-secondary">{{ $t('evaluations.standard.tenMeterWalk') }}:</span>
+              <span class="ml-1 text-text-primary"
+                >{{ record.standardEvaluations.tenMeterWalk }}{{ $t('evaluations.standard.tenMeterWalkUnit') }}</span
+              >
             </div>
             <div
               v-if="
@@ -54,8 +58,10 @@
                 record.standardEvaluations.sixMinuteWalk !== undefined
               "
             >
-              <span class="text-text-secondary">6分間歩行:</span>
-              <span class="ml-1 text-text-primary">{{ record.standardEvaluations.sixMinuteWalk }}m</span>
+              <span class="text-text-secondary">{{ $t('evaluations.standard.sixMinuteWalk') }}:</span>
+              <span class="ml-1 text-text-primary"
+                >{{ record.standardEvaluations.sixMinuteWalk }}{{ $t('evaluations.standard.sixMinuteWalkUnit') }}</span
+              >
             </div>
             <div
               v-if="
@@ -63,7 +69,7 @@
                 record.standardEvaluations.barthelIndex !== undefined
               "
             >
-              <span class="text-text-secondary">Barthel:</span>
+              <span class="text-text-secondary">{{ $t('evaluations.standard.barthelIndex') }}:</span>
               <span class="ml-1 text-text-primary">{{ record.standardEvaluations.barthelIndex }}</span>
             </div>
             <div
@@ -72,7 +78,7 @@
                 record.standardEvaluations.bergBalanceScale !== undefined
               "
             >
-              <span class="text-text-secondary">Berg:</span>
+              <span class="text-text-secondary">{{ $t('evaluations.standard.bergBalanceScale') }}:</span>
               <span class="ml-1 text-text-primary">{{ record.standardEvaluations.bergBalanceScale }}</span>
             </div>
           </div>
@@ -80,7 +86,7 @@
 
         <!-- カスタム評価 -->
         <div v-if="record.customEvaluations.length > 0" class="mb-3">
-          <h5 class="mb-2 text-xs font-medium text-text-secondary">カスタム評価</h5>
+          <h5 class="mb-2 text-xs font-medium text-text-secondary">{{ $t('evaluations.custom.title') }}</h5>
           <div class="space-y-1 text-sm">
             <div v-for="custom in record.customEvaluations" :key="custom.id">
               <span class="text-text-secondary">{{ custom.name }}:</span>
